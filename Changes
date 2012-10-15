@@ -1,6 +1,9 @@
 Revision history for perl module PAUSE::Permissions
 
-0.01 2012-10-14
+0.02 2012-10-15
+    - ANDK's surname was coming out mangled on the umlaut, so using E<ouml>
+    - Various documentation tweaks
 
+0.01 2012-10-14
     - initial release to CPAN
 

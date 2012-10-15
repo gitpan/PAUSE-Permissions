@@ -218,7 +218,11 @@ returns a list of PAUSE ids, or an empty list if the module has no co-maintainer
 
 =back
 
-It returns C<undef> if the module wasn't found in the permissions list.
+C<module_permissions()> returns C<undef>
+if the module wasn't found in the permissions list.
+If you've only just registered your new module,
+or only just uploaded the first release,
+then it might not have made it into the file yet.
 
 =head1 The 06perms.txt file
 
@@ -259,7 +263,7 @@ respect to the module. See below.
 =back
 
 Note that this file lists I<modules>, not distributions.
-Every module in a CPAN distribution will be listed in this file.
+Every module in a CPAN distribution will be listed separately in this file.
 Modules are listed in alphabetical order, and for a given module,
 the PAUSE ids are listed in alphabetical order.
 
@@ -308,10 +312,13 @@ considered the owner.
 
 =item *
 
-If a module is listed in 06perms.txt, then only the people listed (m, f, or c)
+If a module is listed in C<06perms.txt>,
+then only the people listed (m, f, or c)
 are allowed to upload (new) versions of the module.
-If anyone else uploads a version of the module, then the offending I<distribution> will not be indexed:
-it will appear in the uploader's directory on CPAN, but won't be indexed under the module.
+If anyone else uploads a version of the module,
+then the offending I<distribution> will not be indexed:
+it will appear in the uploader's directory on CPAN,
+but won't be indexed under the module.
 
 =item *
 
@@ -409,7 +416,7 @@ L<https://github.com/neilbowers/PAUSE-Permissions>
 
 Neil Bowers E<lt>neilb@cpan.orgE<gt>
 
-Thanks to Andreas König, for patiently answering many questions
+Thanks to Andreas KE<ouml>nig, for patiently answering many questions
 on how this stuff all works.
 
 =head1 COPYRIGHT AND LICENSE
