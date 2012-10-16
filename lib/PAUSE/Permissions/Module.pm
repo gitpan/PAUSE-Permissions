@@ -1,4 +1,7 @@
 package PAUSE::Permissions::Module;
+{
+  $PAUSE::Permissions::Module::VERSION = '0.03';
+}
 
 use Moose;
 

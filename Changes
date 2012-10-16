@@ -1,5 +1,10 @@
 Revision history for perl module PAUSE::Permissions
 
+0.03 2012-10-16
+    - Forgot to include [AutoPrereqs] and other things in dist.ini,
+      so prereqs not getting declared :-(
+      Thanks to JWRIGHT
+
 0.02 2012-10-15
     - ANDK's surname was coming out mangled on the umlaut, so using E<ouml>
     - Various documentation tweaks

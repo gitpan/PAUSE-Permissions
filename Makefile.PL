@@ -11,7 +11,9 @@ use ExtUtils::MakeMaker 6.30;
 my %WriteMakefileArgs = (
   "ABSTRACT" => "interface to PAUSE's module permissions file (06perms.txt)",
   "AUTHOR" => "Neil Bowers <neil\@bowers.com>",
-  "BUILD_REQUIRES" => {},
+  "BUILD_REQUIRES" => {
+    "Test::More" => "0.88"
+  },
   "CONFIGURE_REQUIRES" => {
     "ExtUtils::MakeMaker" => "6.30"
   },
@@ -19,8 +21,14 @@ my %WriteMakefileArgs = (
   "EXE_FILES" => [],
   "LICENSE" => "perl",
   "NAME" => "PAUSE::Permissions",
-  "PREREQ_PM" => {},
-  "VERSION" => "0.02",
+  "PREREQ_PM" => {
+    "File::Spec::Functions" => 0,
+    "HTTP::Tiny" => 0,
+    "Moose" => 0,
+    "strict" => 0,
+    "warnings" => 0
+  },
+  "VERSION" => "0.03",
   "test" => {
     "TESTS" => "t/*.t"
   }
