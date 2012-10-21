@@ -1,5 +1,8 @@
 Revision history for perl module PAUSE::Permissions
 
+0.04 2012-10-21
+    - Removed a debugging print statement.
+
 0.03 2012-10-16
     - Forgot to include [AutoPrereqs] and other things in dist.ini,
       so prereqs not getting declared :-(
