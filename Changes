@@ -1,4 +1,17 @@
-Revision history for perl module PAUSE::Permissions
+Revision history for Perl module PAUSE::Permissions
+
+0.05
+    - switched to Moo
+    - BACKWARDS INCOMPATIBLE CHANGES - simplifying things:
+        + merged public 'filename' and private '_path' into 'path'.
+          If you pass to the constructor, it's where we'll read from,
+          other we'll set it based on File::HomeDir->my_dist_data
+        + changed 'uri' to 'url', because that's more accurate
+        + dropped the 'cachedir' parameter
+      Thanks to DAGOLDEN for the suggestions.
+    - Added method entry_iterator() which returns an instance of
+      PAUSE::Permissions::EntryIterator. Iterates over the whole file.
+    - switched from [GitHub::Meta] to [GithubMeta] in dist.ini
 
 0.04 2012-10-21
     - Removed a debugging print statement.

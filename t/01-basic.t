@@ -14,7 +14,7 @@ my $string;
 # construct PAUSE::Permissions
 #-----------------------------------------------------------------------
 
-$pp = PAUSE::Permissions->new(filename => 't/06perms-mini.txt');
+$pp = PAUSE::Permissions->new(path => 't/06perms-mini.txt');
 
 ok(defined($pp), "instantiate PAUSE::Permissions");
 

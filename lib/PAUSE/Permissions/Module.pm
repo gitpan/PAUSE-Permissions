@@ -1,13 +1,20 @@
 package PAUSE::Permissions::Module;
 {
-  $PAUSE::Permissions::Module::VERSION = '0.04';
+  $PAUSE::Permissions::Module::VERSION = '0.05';
 }
 
-use Moose;
+use Moo;
 
-has 'm' => (is => 'ro', isa => 'Str');
-has 'f' => (is => 'ro', isa => 'Str');
-has 'c' => (is => 'ro', isa => 'ArrayRef[Str]');
+# TODO: I had isa when I was using Moose, need to put those back
+
+# has 'm' => (is => 'ro', isa => 'Str');
+has 'm' => (is => 'ro');
+
+# has 'f' => (is => 'ro', isa => 'Str');
+has 'f' => (is => 'ro');
+
+# has 'c' => (is => 'ro', isa => 'ArrayRef[Str]');
+has 'c' => (is => 'ro');
 
 sub owner
 {

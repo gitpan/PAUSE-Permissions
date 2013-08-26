@@ -1,75 +1,47 @@
 package PAUSE::Permissions;
 {
-  $PAUSE::Permissions::VERSION = '0.04';
+  $PAUSE::Permissions::VERSION = '0.05';
 }
 use strict;
 use warnings;
 
-use Moose;
+use Moo;
 use PAUSE::Permissions::Module;
-use File::Spec::Functions qw(tmpdir catfile);
+use PAUSE::Permissions::EntryIterator;
+use File::HomeDir;
+use File::Spec::Functions 'catfile';
 use HTTP::Tiny;
 
-has 'uri' =>
+my $DISTNAME = 'PAUSE-Permissions';
+my $BASENAME = '06perms.txt';
+
+has 'url' =>
     (
-     is         => 'rw',
-     isa        => 'Str',
-     default    => 'http://www.cpan.org/modules/06perms.txt',
+     is      => 'ro',
+     default => sub { return 'http://www.cpan.org/modules/06perms.txt'; },
     );
 
-has 'cachedir' =>
+has 'path' =>
     (
-     is         => 'rw',
-     isa        => 'Str',
-     default    => sub {
-                       my $dirpath = tmpdir() || die "can't get temp directory: $!\n";
-                       my $dirname = __PACKAGE__;
-                       $dirname =~ s/::/-/g;
-                       my $dir = catfile($dirpath, $dirname);
-                       if (! -d $dir) {
-                           mkdir($dir, 0755)
-                           || die "can't create cache directory $dir: $!\n";
-                       }
-                       return $dir;
-                   },
-    );
-
-has 'filename' =>
-    (
-     is         => 'rw',
-     isa        => 'Str',
-    );
-
-has '_path' =>
-    (
-     is         => 'rw',
-     isa        => 'Str',
-     init_arg   => undef,
+     is => 'rw',
     );
 
 sub BUILD
 {
     my $self = shift;
 
-    if ($self->filename) {
-        if (!-f $self->filename) {
-            die "specified file (", $self->filename, ") not found\n";
-        }
-        $self->_path($self->filename);
-    } else {
-        $self->_get_uri();
+    # If constructor didn't specify a local file, then mirror the file from CPAN
+    if (not $self->path) {
+        $self->path( catfile(File::HomeDir->my_dist_data( $DISTNAME, { create => 1 } ), $BASENAME) );
+        HTTP::Tiny->new()->mirror($self->url, $self->path);
     }
 }
 
-sub _get_uri
+sub entry_iterator
 {
     my $self = shift;
-    my $ua   = HTTP::Tiny->new() || die "failed to create HTTP::Tiny: $!\n";
 
-    $self->_path(catfile($self->cachedir, '06perms.txt'));
-    if (not $ua->mirror($self->uri, $self->_path)) {
-        die "failed to mirror permissions file\n";
-    }
+    return PAUSE::Permissions::EntryIterator->new( permissions => $self );
 }
 
 sub module_permissions
@@ -83,8 +55,8 @@ sub module_permissions
     my %perms;
     my ($m, $u, $p);
 
-    open($fh, '<', $self->_path)
-        || die "can't read local file ", $self->_path, ": $!\n";
+    open($fh, '<', $self->path)
+        || die "can't read local file ", $self->path, ": $!\n";
     while (<$fh>) {
         chomp;
         if ($inheader && /^\s*$/) {
@@ -156,7 +128,9 @@ The SYNOPSIS gives the basic usage.
 
 =head1 METHODS
 
-There are only two methods you need to know: the constructor (C<new>)
+There are only three methods you need to know:
+the constructor (C<new>),
+getting an iterator (C<entry_iterator>),
 and C<module_permissions()>.
 
 =head2 new
@@ -167,22 +141,16 @@ The constructor takes a hash of options:
 
 =item *
 
-B<filename>: the path to a local copy of 06perms.txt.
+B<path>: the path to a local copy of 06perms.txt.
 The constructor will C<die()> if the file doesn't exist, or isn't readable.
 If you don't provide this parameter, then we'll try and get 06perms.txt
-from the C<uri> parameter.
+from the C<url> parameter, and store it in a local directory,
+determined by C<File::HomeDir-E<gt>my_dist_data>.
 
 =item *
 
-B<uri>: the URI for 06perms.txt;
+B<url>: the URL for 06perms.txt;
 defaults to L<http://www.cpan.org/modules/06perms.txt>
-
-=item *
-
-B<cachedir>: if we're getting 06perms.txt from CPAN,
-then this is the directory where we'll cache the file locally.
-By default we call C<tmpdir()> from L<File::Spec>,
-and append C<PAUSE-Permissions>.
 
 =back
 
@@ -194,6 +162,22 @@ of your choosing:
                 uri     => 'http://cpan.inode.at/modules/06perms.txt',
                 cachdir => '/tmp/pause',
             );
+
+=head2 entry_iterator
+
+This is a class method which returns an instance of L<PAUSE::Permissions::EntryIterator>,
+which provides a simple mechanism for iterating over the whole permissions file:
+
+  $iterator = PAUSE::Permissions->entry_iterator();
+  while (my $entry = $iterator->next) {
+    print "module = ", $entry->module,     "\n";
+    print "user   = ", $entry->user,       "\n";
+    print "perm   = ", $entry->permission, "\n";
+  }
+
+The C<module> method returns a module name;
+C<user> returns the PAUSE id of a PAUSE user;
+C<perm> is one of the three permission identifiers ('m', 'f', or 'c').
 
 =head2 module_permissions
 
