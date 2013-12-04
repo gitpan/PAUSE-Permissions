@@ -1,11 +1,13 @@
 package PAUSE::Permissions::Module;
 {
-  $PAUSE::Permissions::Module::VERSION = '0.05';
+  $PAUSE::Permissions::Module::VERSION = '0.06';
 }
 
 use Moo;
 
 # TODO: I had isa when I was using Moose, need to put those back
+
+has 'name' => (is => 'ro');
 
 # has 'm' => (is => 'ro', isa => 'Str');
 has 'm' => (is => 'ro');
@@ -70,9 +72,10 @@ PAUSE::Permissions::Module - PAUSE permissions for one module (from 06perms.txt)
 
  my %options =
     (
-     m => 'LINC',
-     f => 'P5P,
-     c => ['NEILB'],
+     name => 'HTTP::Client',
+     m    => 'LINC',
+     f    => 'P5P,
+     c    => ['NEILB'],
     );
   
  my $mp = PAUSE::Permissions::Module->new( %options );
@@ -106,12 +109,14 @@ because PAUSE treats them as a co-maintainer.
 
 =head2 registered_maintainer
 
-Returns the PAUSE id of the registered maintainer of the module (the 'm' permission),
+Returns the PAUSE id of the registered maintainer of the module
+(the 'm' permission),
 or C<undef> if there isn't one defined for the module.
 
 =head2 first_come
 
-Returns the PAUSE id of the 'first uploader' for the module (the 'f' permission),
+Returns the PAUSE id of the 'first uploader' for the module
+(the 'f' permission),
 or C<undef> if there isn't one defined for the module.
 
 =head2 all_maintainers
@@ -132,7 +137,7 @@ on how this stuff all works.
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2012 by Neil Bowers <neilb@cpan.org>.
+This software is copyright (c) 2012-2013 by Neil Bowers <neilb@cpan.org>.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

@@ -1,6 +1,12 @@
 Revision history for Perl module PAUSE::Permissions
 
-0.05
+0.06 2013-12-04
+    - added module_iterator() method on PAUSE::Permissions,
+      which returns an iterator that will loop over 06perms.txt
+      returning an instance of PAUSE::Permissions::Module each
+      time it's called.
+
+0.05 2013-08-26
     - switched to Moo
     - BACKWARDS INCOMPATIBLE CHANGES - simplifying things:
         + merged public 'filename' and private '_path' into 'path'.

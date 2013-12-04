@@ -1,12 +1,13 @@
 package PAUSE::Permissions;
 {
-  $PAUSE::Permissions::VERSION = '0.05';
+  $PAUSE::Permissions::VERSION = '0.06';
 }
 use strict;
 use warnings;
 
 use Moo;
 use PAUSE::Permissions::Module;
+use PAUSE::Permissions::ModuleIterator;
 use PAUSE::Permissions::EntryIterator;
 use File::HomeDir;
 use File::Spec::Functions 'catfile';
@@ -44,6 +45,13 @@ sub entry_iterator
     return PAUSE::Permissions::EntryIterator->new( permissions => $self );
 }
 
+sub module_iterator
+{
+    my $self = shift;
+
+    return PAUSE::Permissions::ModuleIterator->new( permissions => $self );
+}
+
 sub module_permissions
 {
     my $self   = shift;
@@ -75,6 +83,7 @@ sub module_permissions
 
     if ($seen_module) {
         my @args;
+        push(@args, name => $module);
         push(@args, m => $perms{m}->[0]) if exists $perms{m};
         push(@args, f => $perms{f}->[0]) if exists $perms{f};
         push(@args, c => $perms{c})      if exists $perms{c};
@@ -99,6 +108,12 @@ PAUSE::Permissions - interface to PAUSE's module permissions file (06perms.txt)
   
   my $owner    = $mp->owner;
   my @comaints = $mp->co_maintainers;
+
+  my $iterator = $pp->module_iterator();
+  while (my $mp = $iterator->next_module) {
+    print "module = ", $mp->name, "\n";
+    print "  owner = ", $mp->owner // 'none', "\n";
+  }
 
 =head1 DESCRIPTION
 
@@ -128,9 +143,10 @@ The SYNOPSIS gives the basic usage.
 
 =head1 METHODS
 
-There are only three methods you need to know:
+There are only four methods you need to know:
 the constructor (C<new>),
-getting an iterator (C<entry_iterator>),
+getting an iterator over individual entries (C<entry_iterator>),
+getting an iterator over modules (C<module_iterator>),
 and C<module_permissions()>.
 
 =head2 new
@@ -163,12 +179,32 @@ of your choosing:
                 cachdir => '/tmp/pause',
             );
 
+=head2 module_iterator
+
+This is a method that returns an instance of L<PAUSE::Permissions::ModuleIterator>,
+which provides a simple mechanism for iterating over the whole permissions file,
+module by module:
+
+  $pp       = PAUSE::Permissions->new();
+  $iterator = $pp->module_iterator();
+  
+  while (my $module = $iterator->next_module) {
+    print "module    = ", $module->name,           "\n";
+    print "owner     = ", $module->owner,          "\n";
+    print "co-maints = ", $module->co_maintainers, "\n";
+  }
+
+The C<next_module()> method returns either an instance of L<PAUSE::Permissions::Module>,
+or C<undef> when the end of the file is reached.
+
 =head2 entry_iterator
 
-This is a class method which returns an instance of L<PAUSE::Permissions::EntryIterator>,
-which provides a simple mechanism for iterating over the whole permissions file:
+This is a method that returns an instance of L<PAUSE::Permissions::EntryIterator>,
+which provides a simple mechanism for iterating over the whole permissions file,
+line by line:
 
-  $iterator = PAUSE::Permissions->entry_iterator();
+  $pp       = PAUSE::Permissions->new();
+  $iterator = $pp->entry_iterator();
   while (my $entry = $iterator->next) {
     print "module = ", $entry->module,     "\n";
     print "user   = ", $entry->user,       "\n";
@@ -407,7 +443,7 @@ on how this stuff all works.
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2012 by Neil Bowers <neilb@cpan.org>.
+This software is copyright (c) 2012-2013 by Neil Bowers <neilb@cpan.org>.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

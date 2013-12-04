@@ -9,6 +9,8 @@ lib/PAUSE/Permissions.pm
 lib/PAUSE/Permissions/Entry.pm
 lib/PAUSE/Permissions/EntryIterator.pm
 lib/PAUSE/Permissions/Module.pm
+lib/PAUSE/Permissions/ModuleIterator.pm
 t/01-basic.t
 t/02-entry-iterator.t
+t/03-module-iterator.t
 t/06perms-mini.txt
