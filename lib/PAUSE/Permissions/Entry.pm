@@ -1,6 +1,6 @@
 package PAUSE::Permissions::Entry;
 {
-  $PAUSE::Permissions::Entry::VERSION = '0.06';
+  $PAUSE::Permissions::Entry::VERSION = '0.07';
 }
 
 use Moo;

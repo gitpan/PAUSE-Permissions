@@ -1,5 +1,10 @@
 Revision history for Perl module PAUSE::Permissions
 
+0.07 2013-12-06
+    - Added 'use 5.10.0' to ModuleIterator, as it's using two features
+      introduced in 5.10. Thank you CPAN Testers.
+    - Added SEE ALSO link to App::PAUSE::CheckPerms
+
 0.06 2013-12-04
     - added module_iterator() method on PAUSE::Permissions,
       which returns an iterator that will loop over 06perms.txt

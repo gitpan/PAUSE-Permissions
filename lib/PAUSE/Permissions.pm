@@ -1,6 +1,6 @@
 package PAUSE::Permissions;
 {
-  $PAUSE::Permissions::VERSION = '0.06';
+  $PAUSE::Permissions::VERSION = '0.07';
 }
 use strict;
 use warnings;
@@ -391,6 +391,9 @@ will be downgraded to 'c'.
 =back
 
 =head1 SEE ALSO
+
+L<App::PAUSE::CheckPerms> checks whether all modules in (your)
+CPAN distributions have the same permissions.
 
 C<tmpdir()> in L<File::Spec::Functions> is used to get a local directory for
 caching 06perms.txt.

@@ -21,9 +21,10 @@ requires:
   Moo: 0
   autodie: 0
   feature: 0
+  perl: v5.10.0
   strict: 0
   warnings: 0
 resources:
   homepage: https://github.com/neilbowers/PAUSE-Permissions
   repository: https://github.com/neilbowers/PAUSE-Permissions.git
-version: 0.06
+version: 0.07

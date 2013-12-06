@@ -1,9 +1,10 @@
 package PAUSE::Permissions::ModuleIterator;
 {
-  $PAUSE::Permissions::ModuleIterator::VERSION = '0.06';
+  $PAUSE::Permissions::ModuleIterator::VERSION = '0.07';
 }
 use strict;
 use warnings;
+use 5.10.0;
 
 use Moo;
 use PAUSE::Permissions::Module;
