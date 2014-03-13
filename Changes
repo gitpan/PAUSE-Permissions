@@ -1,5 +1,9 @@
 Revision history for Perl module PAUSE::Permissions
 
+0.08 2014-03-13
+    - Handle package names case-insenstively, as PAUSE now does.
+      Based on two bug reports from RJBS (#1, #2 on github).
+
 0.07 2013-12-06
     - Added 'use 5.10.0' to ModuleIterator, as it's using two features
       introduced in 5.10. Thank you CPAN Testers.

@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More 0.88 tests => 32;
+use Test::More 0.88 tests => 38;
 use PAUSE::Permissions;
 
 my $pp;
@@ -56,6 +56,21 @@ expect_for_module('constant::Atom',
 # Math::Complex,perl,c
 #-----------------------------------------------------------------------
 expect_for_module('Math::Complex',
+                  owner                 => 'RAM',
+                  registered_maintainer => 'RAM',
+                  comaint               => [qw(JHI ZEFRAM perl)],
+                  first_come            => 'ZEFRAM',
+                  all                   => [qw(JHI RAM ZEFRAM perl)],
+                 );
+
+#-----------------------------------------------------------------------
+# Case-insensitive test
+# Math::Complex,JHI,c
+# Math::Complex,RAM,m
+# Math::Complex,ZEFRAM,f
+# Math::Complex,perl,c
+#-----------------------------------------------------------------------
+expect_for_module('math::complex',
                   owner                 => 'RAM',
                   registered_maintainer => 'RAM',
                   comaint               => [qw(JHI ZEFRAM perl)],

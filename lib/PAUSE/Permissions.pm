@@ -1,7 +1,5 @@
 package PAUSE::Permissions;
-{
-  $PAUSE::Permissions::VERSION = '0.07';
-}
+$PAUSE::Permissions::VERSION = '0.08';
 use strict;
 use warnings;
 
@@ -11,6 +9,7 @@ use PAUSE::Permissions::ModuleIterator;
 use PAUSE::Permissions::EntryIterator;
 use File::HomeDir;
 use File::Spec::Functions 'catfile';
+use HTTP::Date qw(time2str);
 use HTTP::Tiny;
 
 my $DISTNAME = 'PAUSE-Permissions';
@@ -34,8 +33,63 @@ sub BUILD
     # If constructor didn't specify a local file, then mirror the file from CPAN
     if (not $self->path) {
         $self->path( catfile(File::HomeDir->my_dist_data( $DISTNAME, { create => 1 } ), $BASENAME) );
-        HTTP::Tiny->new()->mirror($self->url, $self->path);
+        # HTTP::Tiny->new()->mirror($self->url, $self->path);
+        $self->_cache_file_if_needed();
     }
+}
+
+sub _cache_file_if_needed
+{
+    my $self    = shift;
+    my $options = {};
+    my $ua      = HTTP::Tiny->new();
+
+    if (-f $self->path) {
+        $options->{'If-Modified-Since'} = time2str( (stat($self->path))[9]);
+    }
+    my $response = $ua->get($self->url, $options);
+
+    return if $response->{status} == 304; # Not Modified
+
+    if ($response->{status} == 200) {
+        $self->_transform_and_cache($response);
+        return;
+    }
+
+    croak("request for 06perms.txt failed: $response->{status} $response->{reason}");
+}
+
+sub _transform_and_cache
+{
+    my ($self, $response) = @_;
+    my $inheader = 1;
+    my @lines;
+
+    LINE:
+    while ($response->{content} =~ m!^(.*)$!gm) {
+        my $line = $1;
+        if ($line =~ /^$/ && $inheader) {
+            $inheader = 0;
+            next;
+        }
+        next LINE if $inheader;
+        my ($package, $user, $perm) = split(/,/, $1);
+        push(@lines, [lc($package), lc($user), $package, $user, $perm]);
+    }
+
+    open(my $fh, '>', $self->path);
+    print $fh <<'END_HEADER';
+File: PAUSE Permissions data
+Format: 2
+Source: CPAN/modules/06perms.txt
+
+END_HEADER
+
+    foreach my $line (sort { $a->[0] cmp $b->[0] || $a->[1] cmp $b->[1] } @lines) {
+        printf $fh "%s,%s,%s\n", (@$line)[2,3,4];
+    }
+
+    close($fh);
 }
 
 sub entry_iterator
@@ -73,11 +127,11 @@ sub module_permissions
         }
         next if $inheader;
         ($m, $u, $p) = split(/,/, $_);
-        if ($m eq $module) {
+        if (lc($m) eq lc($module)) {
             push(@{ $perms{$p} }, $u);
             $seen_module = 1;
         }
-        last if $seen_module && $m ne $module;
+        last if $seen_module && lc($m) ne lc($module);
     }
     close($fh);
 

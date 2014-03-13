@@ -1,8 +1,5 @@
 package PAUSE::Permissions::Module;
-{
-  $PAUSE::Permissions::Module::VERSION = '0.07';
-}
-
+$PAUSE::Permissions::Module::VERSION = '0.08';
 use Moo;
 
 # TODO: I had isa when I was using Moose, need to put those back
