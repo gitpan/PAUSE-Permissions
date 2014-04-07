@@ -1,5 +1,5 @@
 package PAUSE::Permissions::Entry;
-$PAUSE::Permissions::Entry::VERSION = '0.08';
+$PAUSE::Permissions::Entry::VERSION = '0.09';
 use Moo;
 
 has 'module'     => (is => 'ro');

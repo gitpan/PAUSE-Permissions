@@ -1,5 +1,10 @@
 Revision history for Perl module PAUSE::Permissions
 
+0.09 2014-04-07
+    - Documentation now says you should use 0.08 or later,
+      to make sure you get the case-insensitive handling of package names.
+    - Using croak() but didn't have "use Carp" - thanks to TOKUHIROM
+
 0.08 2014-03-13
     - Handle package names case-insenstively, as PAUSE now does.
       Based on two bug reports from RJBS (#1, #2 on github).
