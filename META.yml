@@ -6,9 +6,9 @@ build_requires:
   File::Slurp: '0'
   Test::More: '0.88'
 configure_requires:
-  ExtUtils::MakeMaker: '6.30'
+  ExtUtils::MakeMaker: '0'
 dynamic_config: 0
-generated_by: 'Dist::Zilla version 5.015, CPAN::Meta::Converter version 2.133380'
+generated_by: 'Dist::Zilla version 5.020, CPAN::Meta::Converter version 2.141170'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -29,4 +29,4 @@ requires:
 resources:
   homepage: https://github.com/neilbowers/PAUSE-Permissions
   repository: https://github.com/neilbowers/PAUSE-Permissions.git
-version: '0.09'
+version: '0.10'

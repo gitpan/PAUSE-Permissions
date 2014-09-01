@@ -1,5 +1,9 @@
 Revision history for Perl module PAUSE::Permissions
 
+0.10 2014-09-01
+    - Documentation fix: 'filename' was changed to 'path' in 0.05.
+      ISHIGAKI++
+
 0.09 2014-04-07
     - Documentation now says you should use 0.08 or later,
       to make sure you get the case-insensitive handling of package names.
